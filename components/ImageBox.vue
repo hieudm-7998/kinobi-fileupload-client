@@ -1,38 +1,73 @@
 <template>
-    <div v-if="files.length === 0" class="h-full flex flex-col items-center justify-center text-gray-500">
-        <v-icon large class="mb-2">mdi-image-off</v-icon>
-        <span>No images uploaded yet.</span>
+  <div
+    v-if="props.isLoading"
+    class="h-full flex flex-col items-center justify-center text-gray-500"
+  >
+    <v-progress-circular
+      indeterminate
+      color="primary"
+      class="mx-auto mb-5"
+    ></v-progress-circular>
+    <p class="text-center">Loading images...</p>
+  </div>
+
+  <div
+    v-else-if="props.files.length === 0"
+    class="h-full flex flex-col items-center justify-center text-gray-500"
+  >
+    <v-icon large class="mb-2">mdi-image-off</v-icon>
+    <span>No images uploaded.</span>
+  </div>
+
+  <div v-else class="h-full overflow-y-auto pr-2">
+    <h2 class="text-2xl font-bold mb-5">Uploaded images</h2>
+    <div class="space-y-4">
+      <ImageCard
+        v-for="file in props.files"
+        :key="file.filename"
+        class="flex items-center gap-4"
+        :file="file"
+        @deleted="emitDeleted"
+        @duplicated="emitDuplicated"
+      />
     </div>
-    <div v-else class="h-full overflow-y-auto pr-2">
-        <h2 class="text-2xl font-bold mb-5">Uploaded images</h2>
-        <div class="space-y-4">
-            <ImageCard v-for="file in files" :key="file.id" class="flex items-center gap-4" :file="file"
-                @deleted="onDelete" @duplicated="onDuplicate" />
-        </div>
-    </div>
+  </div>
 </template>
 
-<script>
-import ImageCard from '~/components/ImageCard.vue';
+<script lang="ts">
+import type { PropType } from 'vue'
+import { defineComponent } from 'vue'
+import ImageCard from '~/components/ImageCard.vue'
+import type { FileSchemaType } from '~/schema/FileSchema'
 
-export default {
-    name: 'ImageBox',
-    components: {
-        ImageCard
+export default defineComponent({
+  name: 'ImageBox',
+  components: { ImageCard },
+  props: {
+    files: {
+      type: Array as PropType<FileSchemaType[]>,
+      default: () => [],
     },
-    props: {
-        files: {
-            type: Array,
-            default: () => []
-        }
+    isLoading: {
+      type: Boolean,
+      default: false,
     },
-    methods: {
-        onDelete(filename) {
-            this.$emit('deleted', filename)
-        },
-        onDuplicate(filename) {
-            this.$emit('duplicated', filename)
-        }
+  },
+  emits: ['deleted', 'duplicated'],
+  setup(props, { emit }) {
+    const emitDeleted = (filename: string) => {
+      emit('deleted', filename)
     }
-};
+
+    const emitDuplicated = (filename: string) => {
+      emit('duplicated', filename)
+    }
+
+    return {
+      props,
+      emitDeleted,
+      emitDuplicated,
+    }
+  },
+})
 </script>
