@@ -1,30 +1,25 @@
 <template>
-  <v-container fluid class="d-flex flex-column align-center justify-center">
-    <h2 class="text-h4 font-weight-bold text-center mb-4">Image Upload</h2>
-    <v-card class="text-center pa-6 mx-auto" style="width: 100%; max-width: 1200px">
-      <v-row>
-        <v-col class="flex-grow-1">
-          <ImageUploadBox @uploaded="fetchFiles" />
-        </v-col>
-        <v-col class="flex-grow-1">
-          <div class="d-flex flex-wrap justify-center mt-6 pa-4">
-            <uploaded-item-card v-for="file in files" :key="file" :item="{ filename: file }"
-              @show-dialog="openDialog" />
-          </div>
-        </v-col>
-      </v-row>
+  <div class="h-screen flex flex-col item-center justify-center">
+    <v-card class="p-6 mx-auto w-full" style="max-width: 1280px; height: 600px;">
+      <div class="flex gap-6 h-full">
+        <div class="flex-1">
+          <ImageUploadBox @uploaded="refreshFiles" />
+        </div>
+        <div class="flex-1">
+          <ImageBox :files="files" @deleted="refreshFiles" @duplicated="refreshFiles" />
+        </div>
+      </div>
     </v-card>
-
-    <image-detail-dialog v-model="dialogOpen" :item="selectedItem" />
-  </v-container>
+  </div>
 </template>
 
 <script>
 import ImageUploadBox from '~/components/ImageUploadBox.vue'
-import ImageDetailDialog from '~/components/ImageDetailDialog.vue'
+import ImageBox from '~/components/ImageBox.vue'
+import { fetchFiles } from '~/api/files.js'
 
 export default {
-  components: { ImageUploadBox, ImageDetailDialog },
+  components: { ImageUploadBox, ImageBox },
   data() {
     return {
       dialogOpen: false,
@@ -33,17 +28,12 @@ export default {
       uploadSuccess: false,
     }
   },
-  mounted() {
-    this.fetchFiles()
+  async mounted() {
+    await this.refreshFiles()
   },
   methods: {
-    async fetchFiles() {
-      try {
-        const res = await this.$axios.get('/files')
-        this.files = res.data
-      } catch (err) {
-        console.error('Failed to fetch files:', err)
-      }
+    async refreshFiles() {
+      this.files = await fetchFiles()
     },
     openDialog(item) {
       this.selectedItem = item

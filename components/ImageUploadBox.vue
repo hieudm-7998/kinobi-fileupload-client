@@ -1,52 +1,49 @@
 <template>
-  <div
-    class="upload-dropzone"
-    @dragenter="onDragEnter"
-    @dragleave="onDragLeave"
-    @dragover.prevent="onDragOver"
-    @drop.prevent="onFileDrop"
-  >
-    <!-- Drag Overlay -->
+  <div class="upload-dropzone" @dragenter="onDragEnter" @dragleave="onDragLeave" @dragover.prevent="onDragOver"
+    @drop.prevent="onFileDrop">
+
     <div v-if="dragActive" class="drop-overlay">
       <v-icon large color="white">mdi-cloud-upload</v-icon>
-      <p class="white--text font-weight-bold text-h6 mt-2">Drop your image here</p>
+      <h4 class="white--text font-weight-bold mt-2">Drop your image here</h4>
     </div>
 
     <v-form @submit.prevent="handleUpload">
-      <!-- Hidden file input -->
-      <v-file-input
-        ref="fileInput"
-        v-model="file"
-        accept="image/*"
-        style="display: none"
-        @change="onFileSelect"
-      />
+      <v-file-input ref="fileInput" v-model="file" accept="image/png,image/jpeg" style="display: none"
+        @change="onFileSelect" />
 
-      <v-icon class="d-block mb-5" color="blue" large>mdi-file-upload</v-icon>
-      <h1 class="text-center font-weight-bold text-h5 mb-3">Drag and Drop file here to upload</h1>
-      <h1 class="text-center font-weight-regular text-h6 mb-3">or</h1>
+      <div class="text-center mb-5">
+        <v-icon color="blue" large>mdi-file-upload</v-icon>
+      </div>
+      <h2 class="text-center text-2xl font-bold mb-5">Drag and drop file here to upload</h2>
+      <h3 class="text-center mb-5">or</h3>
 
-      <!-- Browse button -->
-      <v-btn class="d-block mx-auto mb-3" rounded color="primary" @click="triggerBrowse">
+      <v-btn class="d-block mx-auto mb-5" rounded color="primary" @click="triggerBrowse">
         <v-icon left>mdi-folder-open</v-icon>
         Browse
       </v-btn>
 
-      <p class="text-center gray--text">Supported files: .jpeg, .png</p>
+      <p class="text-center grey--text">Supported files: .jpeg, .png</p>
 
-      <!-- Upload button -->
-      <div v-if="file">
-        <p class="d-block font-weight-medium text-center">{{ file.name }}</p>
-        <v-btn type="submit" color="primary" class="d-block mx-auto" :loading="loading">
-          <v-icon left>mdi-cloud-upload</v-icon>
-          Upload
-        </v-btn>
+      <div v-if="file" class="flex flex-col items-center">
+        <p class="font-medium text-center line-clamp-1">{{ file.name }}</p>
+        <div class="space-x-2">
+          <v-btn type="submit" rounded color="primary" class="block mx-auto" :loading="loading">
+            <v-icon left>mdi-cloud-upload</v-icon>
+            Upload
+          </v-btn>
+          <v-btn color="red" rounded outlined @click="clearFile">
+            <v-icon left>mdi-close</v-icon>
+            Clear
+          </v-btn>
+        </div>
       </div>
     </v-form>
   </div>
 </template>
 
 <script>
+import { uploadFile } from '~/api/files.js'
+
 export default {
   name: 'ImageUploadBox',
   data() {
@@ -81,14 +78,15 @@ export default {
         this.file = droppedFiles[0];
       }
     },
+    clearFile() {
+      this.file = null;
+    },
     async handleUpload() {
       if (!this.file) return;
       this.loading = true;
-      const form = new FormData();
-      form.append('file', this.file);
 
       try {
-        await this.$axios.post('/upload', form);
+        await uploadFile(this.file);
         this.$emit('uploaded');
         this.file = null;
       } catch (e) {
@@ -103,7 +101,7 @@ export default {
 
 <style scoped>
 .upload-dropzone {
-  min-height: 300px;
+  height: 100%;
   border: 2px dashed #3a7fee;
   padding: 20px;
   border-radius: 10px;
