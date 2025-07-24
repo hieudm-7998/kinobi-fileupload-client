@@ -41,7 +41,7 @@
 
       <div v-if="file" class="flex flex-col items-center">
         <p class="font-medium text-center line-clamp-1">{{ file.name }}</p>
-        <div class="space-x-2">
+        <div class="flex items-center gap-2">
           <v-btn
             type="submit"
             rounded

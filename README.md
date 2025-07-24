@@ -1,69 +1,82 @@
-# fileupload-fe
+# [hieudm-7998] Kinobi 3rd Round Fullstack Software Engineer Take-home Assessment
 
-## Build Setup
+This application is deployed at: [https://kinobi-fileupload-client.vercel.app/](https://kinobi-fileupload-client.vercel.app/)
 
-```bash
-# install dependencies
-$ npm install
+---
 
-# serve with hot reload at localhost:3000
-$ npm run dev
 
-# build for production and launch server
-$ npm run build
-$ npm run start
 
-# generate static project
-$ npm run generate
+## Client-side instruction
+
+Make sure that your `nodejs` version is `22` or higher than `16`.
+
+You can find `nodejs` install package [here](https://nodejs.org/en/download).
+
+Pull this repository to your local machine, open terminal from this source code folder, then run:
+
+```
+npm install
 ```
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+Please ignore the vulnerabilities warning (due to old version of dependency packages).
 
-## Special Directories
+Run this command to open the application on local:
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+```
+npm run dev
+```
 
-### `assets`
+If you see this log, you are ready to open the application on your browser:
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+```
+╭───────────────────────────────────────────────────────╮
+│                                                       │
+│   Nuxt @ v2.18.1                                      │
+│                                                       │
+│   ▸ Environment: development                          │
+│   ▸ Rendering:   client-side                          │
+│   ▸ Target:      server                               │
+│                                                       │
+│   Listening: http://localhost:3000/                   │
+│                                                       │
+│   Tailwind Viewer: http://localhost:3000/_tailwind/   │
+│                                                       │
+╰───────────────────────────────────────────────────────╯
+√ Builder initialized                                                                                   
+√ Nuxt files generated
+√ Client
+  Compiled successfully in 336.49ms
+ℹ Waiting for file changes                                                                                   
+ℹ Memory usage: 391 MB (RSS: 1 GB)             
+ℹ Listening on: http://localhost:3000/
+```
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+**Note**: The deployed version is using deployed API as base URL for API calling. If you ran the server source code before, please add `.env` file in root folder and add this line:
 
-### `components`
+```
+API_BASE_URL=http://localhost:3001
+```
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
-
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
+---
 
 
-### `pages`
 
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
+## Breakdowns
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
+* This project is using *Nuxt 2* and *Vuejs 2* (this takes a lot of time for me to find a way to downgrade it without errors 🤕)
+* Add *Typescript* also use *defineComponent* across components.
+* Add *Vuetify 2* and *TailwindCSS* for styling, the font used in application is *Be Vietnam Pro* (shout out to my country 🇻🇳)
+* Add *Zod* to create schema, let it parse through API response before sending data to components.
+* Add some global constants such as API base URL, valid file format to easily change it globally.
+* The image input only takes `.jpg`, `.jpeg` or `.png` format.
+* Handling drag and drop files into the input instead of manually browsing it.
+* This is not required, but I can do it to enhance the UX: Add options menu for each image like *View Detail*, *Download*, *Duplicate* and *Delete*.
 
-### `plugins`
 
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
+## Credit
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
+Jake (Hieu Do Minh)
 
-### `static`
+hieudm.7998@gmail.com
 
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+[https://jakedo-portfolio.vercel.app/](https://jakedo-portfolio.vercel.app/)
