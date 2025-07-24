@@ -1,6 +1,14 @@
 <template>
-  <div>
-    <v-img max-height="150" max-width="250" :src="itemUrl" />
+  <div @dblclick="handleClick">
+    <a :href="itemUrl" target="_blank" rel="noopener" class="d-block mb-2">
+      {{ item.filename }}
+    </a>
+
+    <v-btn icon small color="primary" @click="handleClick">
+      <v-icon>
+        mdi-eye-outline
+      </v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -21,8 +29,10 @@ export default {
       return `${base}/uploads/${this.item.filename}`
     },
   },
-  mounted() {
-    console.log(this.item, 'this.item')
-  }
+  methods: {
+    handleClick() {
+      this.$emit('show-dialog', this.item)
+    },
+  },
 }
 </script>
